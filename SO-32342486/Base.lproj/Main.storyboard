@@ -49,16 +49,34 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wgv-Pz-aur">
+                                <rect key="frame" x="0.0" y="621" width="375" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="3k2-lN-9Ew"/>
+                                </constraints>
+                            </progressView>
+                            <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HxY-L6-Mue">
+                                <rect key="frame" x="177" y="352" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="bh4-x2-N9U" firstAttribute="top" secondItem="wgv-Pz-aur" secondAttribute="bottom" id="2Nf-EY-Yz0"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bh4-x2-N9U" secondAttribute="bottom" id="8zL-3t-Qyb"/>
+                            <constraint firstItem="HxY-L6-Mue" firstAttribute="top" secondItem="065-6C-Khb" secondAttribute="bottom" constant="8" id="Itx-Zr-5Zx"/>
+                            <constraint firstItem="bh4-x2-N9U" firstAttribute="leading" secondItem="wgv-Pz-aur" secondAttribute="leading" id="QeZ-kn-8fD"/>
+                            <constraint firstItem="bh4-x2-N9U" firstAttribute="trailing" secondItem="wgv-Pz-aur" secondAttribute="trailing" id="SZX-1F-dzS"/>
+                            <constraint firstItem="HxY-L6-Mue" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Uhl-fs-hrx"/>
                             <constraint firstItem="065-6C-Khb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kYJ-LH-rd8"/>
                             <constraint firstAttribute="trailing" secondItem="bh4-x2-N9U" secondAttribute="trailing" id="maB-OS-4CY"/>
                             <constraint firstItem="bh4-x2-N9U" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="naD-kL-PUH"/>
                             <constraint firstItem="065-6C-Khb" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="tcc-Jj-OLw"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="playProgress" destination="wgv-Pz-aur" id="DAR-Fz-2mW"/>
+                        <outlet property="recordingActivity" destination="HxY-L6-Mue" id="egb-om-vUF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

@@ -30,7 +30,11 @@ class ViewController: UIViewController {
     var audioRecorder:AVAudioRecorder!
     var audioPlayer:AVAudioPlayer!
 
-    let recordSettings = [AVSampleRateKey : NSNumber(value: Float(44100.0) as Float),
+    var progressLink : CADisplayLink? = nil
+    @IBOutlet weak var recordingActivity: UIActivityIndicatorView!
+    @IBOutlet weak var playProgress: UIProgressView!
+
+    let recordSettings = [AVSampleRateKey : NSNumber(value: Float(44100.0)),
                           AVFormatIDKey : NSNumber(value: Int32(kAudioFormatMPEG4AAC) as Int32),
                           AVNumberOfChannelsKey : NSNumber(value: 1 as Int32),
                           AVEncoderAudioQualityKey : NSNumber(value: Int32(AVAudioQuality.medium.rawValue) as Int32)]
@@ -44,50 +48,81 @@ class ViewController: UIViewController {
             try audioRecorder = AVAudioRecorder(url: directoryURL()!,
                                                 settings: recordSettings)
             audioRecorder.prepareToRecord()
-        } catch {
+        } catch {}
+    }
+
+    @IBAction func doRecordAction(_ sender: AnyObject) {
+        playProgress.setProgress(0, animated: false)
+        recordingActivity.startAnimating()
+        recordingActivity.isHidden = false
+
+        if !audioRecorder.isRecording {
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setActive(true)
+                audioRecorder.record()
+            } catch {}
         }
+    }
+
+    @IBAction func doPlayAction(_ sender: AnyObject) {
+        if !audioRecorder.isRecording {
+            do {
+                playProgress.setProgress(0, animated: false)
+
+                try audioPlayer = AVAudioPlayer(contentsOf: audioRecorder.url)
+                progressLink = CADisplayLink(target: self,
+                                             selector: #selector(ViewController.playerProgress))
+                if let progressLink = progressLink {
+                    progressLink.frameInterval = 2
+                    progressLink.add(to: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+                }
+                audioPlayer.delegate = self
+                audioPlayer.play()
+            } catch {}
+        }
+    }
+
+    @IBAction func doStopAction(_ sender: AnyObject) {
+        audioRecorder.stop()
+        recordingActivity.stopAnimating()
+
+        let audioSession = AVAudioSession.sharedInstance()
+
+        do {
+            try audioSession.setActive(false)
+        } catch {}
+    }
+
+    func playerProgress() {
+        var progress = Float(0)
+        if let audioPlayer = audioPlayer {
+            progress = ((audioPlayer.duration > 0)
+                ? Float(audioPlayer.currentTime/audioPlayer.duration)
+                : 0)
+        }
+        playProgress.setProgress(progress, animated: true)
     }
 
     func directoryURL() -> URL? {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = urls[0] as URL
-        let soundURL = documentDirectory.appendingPathComponent("sound.m4a")
+        let soundURL = documentDirectory.appendingPathComponent("SO-32342486")
         return soundURL
-    }
-
-    @IBAction func doRecordAction(_ sender: AnyObject) {
-        if !audioRecorder.isRecording {
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setActive(true)
-                audioRecorder.record()
-            } catch {
-            }
-        }
-    }
-
-    @IBAction func doPlayAction(_ sender: AnyObject) {
-        if (!audioRecorder.isRecording){
-            do {
-                try audioPlayer = AVAudioPlayer(contentsOf: audioRecorder.url)
-                audioPlayer.play()
-            } catch {
-            }
-        }
-    }
-
-    @IBAction func doStopAction(_ sender: AnyObject) {
-        audioRecorder.stop()
-        let audioSession = AVAudioSession.sharedInstance()
-
-        do {
-            try audioSession.setActive(false)
-        } catch {
-        }
-    }
-    
-    @IBAction func doPauseAction(_ sender: AnyObject) {
     }
 }
 
+extension ViewController : AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if let progressLink = progressLink {
+            progressLink.invalidate()
+        }
+    }
+
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        if let progressLink = progressLink {
+            progressLink.invalidate()
+        }
+    }
+}
