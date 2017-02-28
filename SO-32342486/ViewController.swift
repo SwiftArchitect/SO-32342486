@@ -35,9 +35,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var playProgress: UIProgressView!
 
     let recordSettings = [AVSampleRateKey : NSNumber(value: Float(44100.0)),
-                          AVFormatIDKey : NSNumber(value: Int32(kAudioFormatMPEG4AAC) as Int32),
-                          AVNumberOfChannelsKey : NSNumber(value: 1 as Int32),
-                          AVEncoderAudioQualityKey : NSNumber(value: Int32(AVAudioQuality.medium.rawValue) as Int32)]
+                          AVFormatIDKey : NSNumber(value: Int32(kAudioFormatMPEG4AAC)),
+                          AVNumberOfChannelsKey : NSNumber(value: Int32(1)),
+                          AVEncoderAudioQualityKey : NSNumber(value: Int32(AVAudioQuality.medium.rawValue))]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +45,7 @@ class ViewController: UIViewController {
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try audioRecorder = AVAudioRecorder(url: directoryURL()!,
-                                                settings: recordSettings)
+            try audioRecorder = AVAudioRecorder(url: directoryURL()!, settings: recordSettings)
             audioRecorder.prepareToRecord()
         } catch {}
     }
@@ -108,7 +107,7 @@ class ViewController: UIViewController {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = urls[0] as URL
-        let soundURL = documentDirectory.appendingPathComponent("SO-32342486")
+        let soundURL = documentDirectory.appendingPathComponent("SO-32342486.m4a")
         return soundURL
     }
 }
