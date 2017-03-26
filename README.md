@@ -1,5 +1,7 @@
 # AVPlayerViewController using audio-only AVPlayer & AVAudioRecorder in Swift
 
+![preview](https://i.stack.imgur.com/GeXXO.png)
+
 ---
 
 ### Stack Overflow Questions 28402521 and 32342486
