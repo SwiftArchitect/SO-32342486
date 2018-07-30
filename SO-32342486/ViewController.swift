@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  SO-32342486
 //
-//  Copyright © 2017 Xavier Schott
+//  Copyright © 2017, 2018 Xavier Schott
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
@@ -73,7 +73,7 @@ class ViewController: UIViewController {
                 progressLink = CADisplayLink(target: self,
                                              selector: #selector(ViewController.playerProgress))
                 if let progressLink = progressLink {
-                    progressLink.frameInterval = 2
+                    progressLink.preferredFramesPerSecond = 2
                     progressLink.add(to: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
                 }
                 audioPlayer.delegate = self
@@ -93,7 +93,7 @@ class ViewController: UIViewController {
         } catch {}
     }
 
-    func playerProgress() {
+    @objc func playerProgress() {
         var progress = Float(0)
         if let audioPlayer = audioPlayer {
             progress = ((audioPlayer.duration > 0)
